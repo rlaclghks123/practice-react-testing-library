@@ -12,14 +12,14 @@ describe('colorButton test', () => {
     render(<App />);
     const colorButton = screen.getByRole('button', { name: 'Change To blue' });
     fireEvent.click(colorButton);
-    expect(colorButton.style.backgroundColor).toBe('blue');
+    expect(colorButton).toHaveStyle({ backgroundColor: 'blue' });
   });
 
   test('button content test after click', () => {
     render(<App />);
     const colorButton = screen.getByRole('button', { name: 'Change To blue' });
     fireEvent.click(colorButton);
-    expect(colorButton.textContent).toBe('Change To red');
+    expect(colorButton).toHaveTextContent('Change To red');
   });
 });
 
