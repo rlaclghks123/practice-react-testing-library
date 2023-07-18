@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import SummaryForm from '../SummaryForm';
 import userEvent from '@testing-library/user-event';
@@ -7,7 +7,7 @@ describe('SummaryForm Test', () => {
   test('checkbox and button initial status Test', () => {
     render(<SummaryForm />);
     const button = screen.getByRole('button', { name: 'Confirm order' });
-    const checkbox = screen.getByRole('checkbox', { name: 'I agree to Terms and Conditions' });
+    const checkbox = screen.getByRole('checkbox', { name: 'Terms and Conditions' });
     expect(button).toBeDisabled();
     expect(checkbox).not.toBeChecked();
   });
@@ -16,7 +16,7 @@ describe('SummaryForm Test', () => {
     render(<SummaryForm />);
     const user = userEvent.setup();
     const button = screen.getByRole('button', { name: 'Confirm order' });
-    const checkbox = screen.getByRole('checkbox', { name: 'I agree to Terms and Conditions' });
+    const checkbox = screen.getByRole('checkbox', { name: 'Terms and Conditions' });
     await user.click(checkbox);
     expect(button).toBeEnabled();
 
@@ -25,12 +25,21 @@ describe('SummaryForm Test', () => {
   });
 
   test('popover responds to hover', async () => {
+    render(<SummaryForm />);
     const user = userEvent.setup();
 
     // popover starts out hidden
+    const nullPopover = screen.queryByText(/no ice cream will actually be delivered/i);
+    expect(nullPopover).not.toBeInTheDocument();
 
-    // popover appears on mouseover of checkbox label
+    // // popover appears on mouseover of checkbox label
+    const termsAndConditions = screen.getByText(/terms and conditions/i);
+    await user.hover(termsAndConditions);
+    const popover = screen.getByText(/no ice cream will actually be delivered/i);
+    expect(popover).toBeInTheDocument();
 
     // popover disappears when we mouse out
+    await user.unhover(termsAndConditions);
+    expect(nullPopover).not.toBeInTheDocument();
   });
 });
