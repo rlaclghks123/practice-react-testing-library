@@ -1,29 +1,68 @@
 import { useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import styled from 'styled-components';
+
+const StyleContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+`;
+
+const StyleInput = styled.input`
+  margin: 5px;
+`;
+
+const StyleButton = styled.button`
+  margin-top: 10px;
+  width: 30%;
+`;
+
+const StyleInputContainer = styled.div`
+  position: relative;
+
+  div {
+    position: absolute;
+    right: -400px;
+    padding: 50px;
+    top: 0px;
+    background-color: white;
+  }
+
+  label {
+    cursor: pointer;
+    color: blue;
+  }
+`;
 
 const SummaryForm = () => {
   const [disabled, setDisabled] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
-  const checkboxLabel = (
-    <span>
-      I agree to <span style={{ color: 'blue' }}>Terms and Conditions</span>
-    </span>
-  );
+  const handleOver = (e) => {
+    setHovered(true);
+  };
+
+  const handleLeave = (e) => {
+    setHovered(false);
+  };
+
   return (
-    <Form>
-      <Form.Group controlId="terms-and-contitions">
-        <Form.Check
-          type="checkbox"
-          checked={disabled}
+    <StyleContainer>
+      <StyleInputContainer>
+        <StyleInput
           onChange={(e) => setDisabled(e.target.checked)}
-          label={checkboxLabel}
+          type="checkbox"
+          id={'checkboxLabel'}
         />
-      </Form.Group>
-      <Button variant="primary" disabled={!disabled}>
-        Confirm order
-      </Button>
-    </Form>
+        I agree to
+        <label htmlFor="checkboxLabel" onMouseOver={handleOver} onMouseLeave={handleLeave}>
+          Terms and Conditions
+        </label>
+        {hovered && <div>no ice cream will actually be delivered</div>}
+      </StyleInputContainer>
+
+      <StyleButton disabled={!disabled}>Confirm order</StyleButton>
+    </StyleContainer>
   );
 };
 
