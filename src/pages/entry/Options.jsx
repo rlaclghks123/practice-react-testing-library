@@ -2,19 +2,23 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ScoopOptions from './ScoopOptions';
 import ToppingOptions from './ToppingOptions';
+import AlertBanner from '../common/AlertBanner';
 
 const Options = ({ optionType }) => {
   const [items, setItems] = useState([]);
+  const [error, setError] = useState(false);
+
   useEffect(() => {
     axios
       .get(`http://localhost:3030/${optionType}`)
       .then((response) => setItems(response.data))
-      .catch((error) => {
-        // TODO: 에러처리
-      });
+      .catch((error) => setError(true));
   }, [optionType]);
 
-  // TODO : Topping Component 만든뒤 null 변경하기
+  if (error) {
+    return <AlertBanner />;
+  }
+
   const ItemComponents = optionType === 'scoops' ? ScoopOptions : ToppingOptions;
 
   const optionItems = items.map((item) => (
